@@ -20,10 +20,22 @@ Combobox.Selection = (Base) =>
       if (option) {
         this._markValid();
         this._maybeAutocompleteWith(option, { force });
+        this._fireChangeEvent(option);
         this._commitSelection(option, { selected: true });
       } else {
         this._markInvalid();
       }
+    }
+
+    _fireChangeEvent(option) {
+      const itemSelectedEvent = new CustomEvent("combobox:itemSelected", {
+        detail: { selectedItem: option }, // Assuming `selectedItem` is the item being selected
+        bubbles: true, // Allows the event to bubble up through the DOM
+        cancelable: true, // Allows the event to be cancelled
+      });
+
+      // Dispatch the event from the element that users interact with, or a parent element
+      this.element.dispatchEvent(itemSelectedEvent);
     }
 
     _commitSelection(option, { selected }) {
@@ -43,15 +55,6 @@ Combobox.Selection = (Base) =>
       }
 
       option.setAttribute("aria-selected", selected);
-
-      const itemSelectedEvent = new CustomEvent("combobox:itemSelected", {
-        detail: { selectedItem: selectedItem }, // Assuming `selectedItem` is the item being selected
-        bubbles: true, // Allows the event to bubble up through the DOM
-        cancelable: true, // Allows the event to be cancelled
-      });
-
-      // Dispatch the event from the element that users interact with, or a parent element
-      this.element.dispatchEvent(itemSelectedEvent);
     }
 
     _deselect() {
