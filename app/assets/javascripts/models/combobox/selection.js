@@ -43,6 +43,17 @@ Combobox.Selection = (Base) =>
       }
     }
 
+    _fireChangeEvent(option) {
+      const itemSelectedEvent = new CustomEvent("combobox:itemSelected", {
+        detail: { selectedItem: option }, // Assuming `selectedItem` is the item being selected
+        bubbles: true, // Allows the event to bubble up through the DOM
+        cancelable: true, // Allows the event to be cancelled
+      });
+
+      // Dispatch the event from the element that users interact with, or a parent element
+      this.element.dispatchEvent(itemSelectedEvent);
+    }
+
     _markSelected(option, { selected }) {
       if (this.hasSelectedClass) {
         option.classList.toggle(this.selectedClass, selected);
