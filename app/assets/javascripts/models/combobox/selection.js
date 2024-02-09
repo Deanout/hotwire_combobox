@@ -4,7 +4,12 @@ import { wrapAroundAccess } from "helpers";
 Combobox.Selection = (Base) =>
   class extends Base {
     selectOption(event) {
+      // Direct user action via click
       this._select(event.currentTarget);
+
+      // Directly fire the event here, indicating a user-initiated action
+      this._fireChangeEvent(event.currentTarget);
+
       this.close();
     }
 
@@ -32,7 +37,6 @@ Combobox.Selection = (Base) =>
       if (selected) {
         this.hiddenFieldTarget.value = option.dataset.value;
         option.scrollIntoView({ block: "nearest" });
-        this._fireChangeEvent(option);
       } else {
         this.hiddenFieldTarget.value = null;
       }
