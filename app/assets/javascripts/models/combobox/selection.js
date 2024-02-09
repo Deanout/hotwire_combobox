@@ -20,10 +20,21 @@ Combobox.Selection = (Base) =>
       if (option) {
         this._markValid();
         this._maybeAutocompleteWith(option, { force });
-        this._fireChangeEvent(option);
         this._commitSelection(option, { selected: true });
       } else {
         this._markInvalid();
+      }
+    }
+
+    _commitSelection(option, { selected }) {
+      this._markSelected(option, { selected });
+
+      if (selected) {
+        this.hiddenFieldTarget.value = option.dataset.value;
+        option.scrollIntoView({ block: "nearest" });
+        this._fireChangeEvent(option);
+      } else {
+        this.hiddenFieldTarget.value = null;
       }
     }
 
@@ -36,17 +47,6 @@ Combobox.Selection = (Base) =>
 
       // Dispatch the event from the element that users interact with, or a parent element
       this.element.dispatchEvent(itemSelectedEvent);
-    }
-
-    _commitSelection(option, { selected }) {
-      this._markSelected(option, { selected });
-
-      if (selected) {
-        this.hiddenFieldTarget.value = option.dataset.value;
-        option.scrollIntoView({ block: "nearest" });
-      } else {
-        this.hiddenFieldTarget.value = null;
-      }
     }
 
     _markSelected(option, { selected }) {
